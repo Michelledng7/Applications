@@ -1,9 +1,9 @@
-import React, {useState} from 'react'
-import {IState as Props} from '../App'
+import React, { useState } from 'react';
+import { IState as Props } from '../App';
 
 interface IProps {
-    people: Props["people"]
-    setPeople: React.Dispatch<React.SetStateAction<Props["people"]>>
+	people: Props['people'];
+	setPeople: React.Dispatch<React.SetStateAction<Props['people']>>;
 }
 
 // interface IPeople {
@@ -15,52 +15,86 @@ interface IProps {
 //   } []
 // }
 
+const AddList: React.FC<IProps> = ({ people, setPeople }) => {
+	const [input, setInput] = useState({
+		name: '',
+		url: '',
+		age: '',
+		notes: '',
+	});
 
+	const handleChanges = (
+		e:
+			| React.ChangeEvent<HTMLInputElement>
+			| React.ChangeEvent<HTMLTextAreaElement>
+	): void => {
+		setInput({
+			...input,
+			[e.target.name]: e.target.value,
+		});
+	};
 
-const AddList: React.FC<IProps> = ({people, setPeople}) => {
+	const handleSubmit = () => {
+		if (!input.name || !input.url) {
+			return;
+		}
 
-  const [input, setInput] = useState({
-    name: "",
-    url: "",
-    age: "",
-    notes: ""
-  })
+		setPeople([
+			...people,
+			{
+				name: input.name,
+				url: input.url,
+				age: parseInt(input.age),
+				notes: input.notes,
+			},
+		]);
 
-const handleChanges = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>): void => {
-  setInput({
-    ...input, [e.target.name]: e.target.value
-})}
+		setInput({
+			name: '',
+			url: '',
+			age: '',
+			notes: '',
+		});
+	};
 
-const handleSubmit = () => {
-  if (!input.name || !input.url ) {
-    return
-  }
- 
-  setPeople([...people, 
-   {  name : input.name,
-      url : input.url,
-      age : parseInt(input.age),
-      notes : input.notes
-   }])
+	return (
+		<div className='AddToList'>
+			<input
+				className='AddToList-input'
+				type='text'
+				placeholder='Name'
+				value={input.name}
+				onChange={handleChanges}
+				name='name'
+			/>
+			<input
+				className='AddToList-input'
+				type='text'
+				placeholder='Image URL'
+				value={input.url}
+				onChange={handleChanges}
+				name='url'
+			/>
+			<input
+				className='AddToList-input'
+				type='text'
+				placeholder='Age'
+				value={input.age}
+				onChange={handleChanges}
+				name='age'
+			/>
+			<textarea
+				className='AddToList-input'
+				placeholder='Notes'
+				value={input.notes}
+				onChange={handleChanges}
+				name='notes'
+			/>
+			<button className='AddToList-btn' onClick={handleSubmit}>
+				Add to list
+			</button>
+		</div>
+	);
+};
 
-  setInput({
-    name: "",
-    url: "",
-    age: "",
-    notes: ""
-  })
-}
-
-
-  return (
-    <div className='AddToList'>
-      <input className = 'AddToList-input' type='text' placeholder = 'Name' value = {input.name} onChange ={handleChanges} name = 'name' />
-      <input className = 'AddToList-input' type='text' placeholder = 'Image URL' value = {input.url} onChange= {handleChanges} name ='url' />
-      <input className = 'AddToList-input' type='text' placeholder = 'Age' value = {input.age} onChange= {handleChanges} name ='age'/>
-      <textarea className = 'AddToList-input' placeholder = 'Notes' value = {input.notes} onChange = {handleChanges} name = 'notes' />     
-      <button className = 'AddToList-btn' onClick={handleSubmit} >Add to list</button>
-    </div>)
-    
-}
-
-export default AddList
+export default AddList;
